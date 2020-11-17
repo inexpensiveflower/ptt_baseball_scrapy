@@ -65,7 +65,8 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
    'ptt_baseball_scrapy.pipelines.PttBaseballScrapyPipeline': None,
    'ptt_baseball_scrapy.pipelines.PttBaseballPostPipeline':300,
-   'ptt_baseball_scrapy.pipelines.PttBaseballReplyPipeline':350
+   'ptt_baseball_scrapy.pipelines.PttBaseballReplyPipeline':350,
+   #'ptt_baseball_scrapy.pipelines.DeleteNullTitlePipeline':200,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

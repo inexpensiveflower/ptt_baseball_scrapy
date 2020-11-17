@@ -12,10 +12,7 @@ class PttBaseballSpider(scrapy.Spider):
     start_urls = ['http://www.ptt.cc/bbs/Baseball/index.html', ]
 
     _page = 0
-    MAX_PAGES = 2
-
-
-    	
+    MAX_PAGES = 10
 
     def parse(self, response):
 
@@ -57,12 +54,12 @@ class PttBaseballSpider(scrapy.Spider):
     	except:
     		return(0)
 
-    	print("作者 ", post_author)
-    	print("標題 ", post_title)
-    	print("時間 ", post_time)
+    	#print("作者 ", post_author)
+    	#print("標題 ", post_title)
+    	#print("時間 ", post_time)
     	reply_list = response.css('div.push > span.push-tag')
     	reply_push = reply_list.css('::text').getall()
-    	print("留言數 ", len(reply_list))
+    	#print("留言數 ", len(reply_list))
 
     	score = 0
     	push_count = 0
@@ -76,7 +73,7 @@ class PttBaseballSpider(scrapy.Spider):
     		else:
     			pass
     	score = score + push_count - abstract_count
-    	print("文章分數 ", score)
+    	#print("文章分數 ", score)
 
     	post_info['author'] = post_author
     	post_info['title'] = post_title

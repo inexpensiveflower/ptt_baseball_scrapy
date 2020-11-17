@@ -7,6 +7,7 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 import ptt_baseball_scrapy.items as items
+from scrapy.exceptions import DropItem
 
 
 class PttBaseballScrapyPipeline:
@@ -38,7 +39,7 @@ class AbstractMongoPipeline(object):
 
 class PttBaseballPostPipeline(AbstractMongoPipeline):
 	
-	collection_name = 'aticle_2'
+	collection_name = 'article_scrapy'
 
 	def process_item(self, item, spider):
 		if type(item) is items.PttBaseballScrapyPostItem:
@@ -62,7 +63,7 @@ class PttBaseballPostPipeline(AbstractMongoPipeline):
 
 class PttBaseballReplyPipeline(AbstractMongoPipeline):
 
-	collection_name = 'repsonse_2'
+	collection_name = 'response_scrapy'
 
 	def process_item(self, item, spider):
 		if type(item) is items.PttBaseballScrapyReplyItem:
@@ -81,3 +82,13 @@ class PttBaseballReplyPipeline(AbstractMongoPipeline):
 				)
 				print("回覆內容新增成功")
 		return item
+
+class DeleteNullTitlePipeline(object):
+	def process_item(self, item, spider):
+		if type(item) is items.PttBaseballScrapyPostItem:
+			title = item['title']
+
+			if title:
+				return item
+			else:
+				raise DropItem('Found null title %s', item)
