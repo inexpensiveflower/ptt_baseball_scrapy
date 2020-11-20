@@ -37,12 +37,12 @@ class AbstractMongoPipeline(object):
 	def close_spider(self, spider):
 		self.client.close()
 
-class PttBaseballPostPipeline(AbstractMongoPipeline):
+class ArticleReplyPipeline(AbstractMongoPipeline):
 	
-	collection_name = 'article_scrapy'
+	collection_name = 'baseball_article_reply'
 
 	def process_item(self, item, spider):
-		if type(item) is items.PttBaseballScrapyPostItem:
+		if type(item) is items.ArticleReplyItem:
 			document = self.collection.find_one({'post_url': item['post_url']})
 
 			if not document:
@@ -60,35 +60,3 @@ class PttBaseballPostPipeline(AbstractMongoPipeline):
 				print(item['title'], "   更新成功!")
 			
 		return item
-
-class PttBaseballReplyPipeline(AbstractMongoPipeline):
-
-	collection_name = 'response_scrapy'
-
-	def process_item(self, item, spider):
-		if type(item) is items.PttBaseballScrapyReplyItem:
-			document = self.collection.find_one({'reply_content':item['reply_content']})
-
-			if not document:
-				self.collection.insert_one(dict(item))
-				print("回覆內容新增成功")
-				
-			else:
-				
-				self.collection.update_one(
-					{'_id':document['_id']},
-					{'$set':dict(item)},
-					upsert = True
-				)
-				print("回覆內容新增成功")
-		return item
-
-class DeleteNullTitlePipeline(object):
-	def process_item(self, item, spider):
-		if type(item) is items.PttBaseballScrapyPostItem:
-			title = item['title']
-
-			if title:
-				return item
-			else:
-				raise DropItem('Found null title %s', item)
